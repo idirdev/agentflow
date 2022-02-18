@@ -4,6 +4,12 @@ AI agent workflow orchestration engine with multi-model support, tool calling, a
 
 ![Preview](./assets/preview.svg)
 
+### Workflow Execution
+![Workflow Run](./assets/workflow-run.svg)
+
+### Architecture
+![Architecture](./assets/architecture.svg)
+
 ## Features
 
 - **Workflow Engine** — Define multi-step AI workflows with YAML or TypeScript
