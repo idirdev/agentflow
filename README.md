@@ -109,3 +109,9 @@ src/
 ## License
 
 MIT
+
+## Supported Providers
+
+- OpenAI (GPT-4, GPT-3.5)
+- Anthropic (Claude 3)
+- Local models via Ollama
