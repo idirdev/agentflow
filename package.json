@@ -9,7 +9,9 @@
     "build": "tsc",
     "dev": "tsx watch src/cli/index.ts",
     "start": "node dist/cli/index.ts",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "bench": "tsx benchmarks/engine.bench.ts",
     "lint": "eslint src/",
     "format": "prettier --write src/"
   },
