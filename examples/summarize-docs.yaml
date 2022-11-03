@@ -1,0 +1,44 @@
+name: document-summarization
+description: Multi-pass document summarization with quality checks
+version: "1.0"
+
+variables:
+  maxLength: 500
+  style: "technical"
+
+steps:
+  - id: extract-sections
+    agent: document-parser
+    input: |
+      Parse the document and extract all major sections.
+      Return a structured list with section titles and content.
+    outputKey: sections
+
+  - id: summarize-each
+    agent: summarizer
+    input: |
+      Summarize each section concisely (max {{maxLength}} words per section):
+      {{sections}}
+      Use a {{style}} tone. Keep key facts and figures.
+    dependsOn: [extract-sections]
+    outputKey: summaries
+    retries: 2
+
+  - id: quality-check
+    agent: qa-reviewer
+    input: |
+      Review these summaries for accuracy and completeness:
+      {{summaries}}
+      Flag any sections that lost critical information.
+    dependsOn: [summarize-each]
+    outputKey: review
+
+  - id: final-summary
+    agent: summarizer
+    input: |
+      Produce a final consolidated summary incorporating review feedback:
+      Summaries: {{summaries}}
+      Review notes: {{review}}
+      Target length: {{maxLength}} words total.
+    dependsOn: [summarize-each, quality-check]
+    condition: "review && review.length > 0"
