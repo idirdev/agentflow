@@ -28,7 +28,11 @@ export class WorkflowEngine {
 
     const executionOrder = this.resolveExecutionOrder(workflow.steps);
 
+    let halted = false;
+
     for (const batch of executionOrder) {
+      if (halted) break;
+
       const batchPromises = batch.map((step) =>
         this.executeStep(step, context, workflow.onError || "stop")
       );
@@ -56,6 +60,7 @@ export class WorkflowEngine {
           });
           if (workflow.onError === "stop") {
             this.logger.error(`Workflow halted at step: ${step.id}`);
+            halted = true;
             break;
           }
         }
@@ -66,9 +71,18 @@ export class WorkflowEngine {
     const totalCost = stepResults.reduce((sum, r) => sum + r.costUsd, 0);
     const hasFailures = stepResults.some((r) => r.status === "failed");
 
+    let status: WorkflowResult["status"];
+    if (!hasFailures) {
+      status = "completed";
+    } else if (halted) {
+      status = "failed";
+    } else {
+      status = stepResults.some((r) => r.status === "completed") ? "partial" : "failed";
+    }
+
     return {
       workflowName: workflow.name,
-      status: hasFailures ? (stepResults.some((r) => r.status === "completed") ? "partial" : "failed") : "completed",
+      status,
       steps: stepResults,
       totalTokens,
       totalCostUsd: totalCost,
