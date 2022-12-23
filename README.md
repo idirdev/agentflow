@@ -115,3 +115,23 @@ MIT
 - OpenAI (GPT-4, GPT-3.5)
 - Anthropic (Claude 3)
 - Local models via Ollama
+
+---
+
+## 🇫🇷 Documentation en français
+
+### Description
+AgentFlow est un moteur d'orchestration de workflows pour agents IA avec support multi-modèles, appel d'outils et suivi des coûts. Il permet de concevoir, exécuter et monitorer des pipelines d'agents IA complexes avec une interface visuelle intuitive. Compatible avec OpenAI, Anthropic et d'autres fournisseurs de modèles.
+
+### Installation
+```bash
+npm install agentflow
+```
+
+### Utilisation
+```bash
+# Configurez vos clés API
+export OPENAI_API_KEY=sk-...
+# Puis définissez et exécutez vos workflows d'agents
+```
+Consultez la documentation en anglais ci-dessus pour la création de workflows, la gestion des outils et le suivi des coûts.
