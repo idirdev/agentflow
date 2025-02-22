@@ -1,0 +1,35 @@
+name: code-review-pipeline
+description: Automated code review workflow
+version: "1.0"
+
+variables:
+  repository: "my-app"
+  language: "typescript"
+
+steps:
+  - id: analyze
+    agent: code-analyzer
+    input: |
+      Analyze the following {{language}} code for potential issues:
+      - Code quality and readability
+      - Performance concerns
+      - Security vulnerabilities
+      Look for common anti-patterns.
+    outputKey: analysis
+
+  - id: suggest
+    agent: suggestion-engine
+    input: |
+      Based on this analysis: {{analysis}}
+      Generate specific improvement suggestions with code examples.
+    dependsOn: [analyze]
+    outputKey: suggestions
+
+  - id: summarize
+    agent: report-writer
+    input: |
+      Create a concise code review report:
+      Analysis: {{analysis}}
+      Suggestions: {{suggestions}}
+      Format as markdown with severity levels.
+    dependsOn: [analyze, suggest]

@@ -1,0 +1,28 @@
+name: data-classification-pipeline
+description: Multi-stage data classification and reporting
+version: "1.0"
+
+steps:
+  - id: extract
+    agent: data-extractor
+    input: "Extract structured data from the raw input and normalize fields."
+    outputKey: extracted_data
+
+  - id: classify
+    agent: data-classifier
+    input: "Classify the following data into categories: {{extracted_data}}"
+    dependsOn: [extract]
+    outputKey: classifications
+    retries: 3
+
+  - id: validate
+    agent: quality-checker
+    input: "Validate classifications for accuracy: {{classifications}}"
+    dependsOn: [classify]
+    condition: "classifications && classifications.length > 0"
+    outputKey: validated
+
+  - id: report
+    agent: report-writer
+    input: "Generate a summary report for: {{validated}}"
+    dependsOn: [validate]
